@@ -5,5 +5,6 @@ const router = Router();
 
 router.get("/", filmesController.listar);
 router.post("/", filmesController.criar);
+router.delete("/:id", filmesController.deletar);
 
 export default router;

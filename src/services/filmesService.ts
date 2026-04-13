@@ -19,7 +19,11 @@ export function buscarPorId(id: number): Filme | undefined {
     return filmes.find(f => f.id === id);
 }
 
-export function deletarFilme(id: number): void {
+export function deletarFilme(id: number): boolean {
     const index = filmes.findIndex(f => f.id === id);
-    if (index !== -1) filmes.splice(index, 1);
+
+    if (index === -1) return false;
+
+    filmes.splice(index, 1);
+    return true;
 }
