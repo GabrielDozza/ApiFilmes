@@ -1,0 +1,11 @@
+import { Request, Response } from "express";
+import * as filmesService from "../services/filmesService";
+
+export function listar(req: Request, res: Response) {
+    res.json(filmesService.listarFilmes());
+}
+
+export function criar(req: Request, res: Response) {
+    const filme = filmesService.criarFilme(req.body);
+    res.status(201).json(filme);
+}
