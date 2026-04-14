@@ -7,7 +7,15 @@ export function listar(req: Request, res: Response) {
 }
 
 export function criar(req: Request, res: Response) {
+    const { titulo, descricao, diretor, ano, genero } = req.body;
+
+    // 🔥 VALIDAÇÃO AQUI
+    if (!titulo || !descricao || !diretor) {
+        return res.status(400).json({ erro: "Campos obrigatórios" });
+    }
+
     const filme = filmesService.criarFilme(req.body);
+
     res.status(201).json(filme);
 }
 

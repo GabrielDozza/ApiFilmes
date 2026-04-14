@@ -19,3 +19,12 @@ export function criarReview(
 export function listarReviews(filmeId: number): Review[] {
     return reviews.filter(r => r.filmeId === filmeId);
 }
+
+export function deletarReview(id: number): boolean {
+    const index = reviews.findIndex(r => r.id === id);
+
+    if (index === -1) return false;
+
+    reviews.splice(index, 1);
+    return true;
+}

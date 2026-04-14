@@ -23,3 +23,15 @@ export function criar(req: Request, res: Response) {
 
     res.status(201).json(review);
 }
+
+export function deletar(req: Request, res: Response) {
+    const id = Number(req.params.id);
+
+    const sucesso = reviewsService.deletarReview(id);
+
+    if (!sucesso) {
+        return res.status(404).json({ erro: "Review não encontrada" });
+    }
+
+    res.status(204).send();
+}
