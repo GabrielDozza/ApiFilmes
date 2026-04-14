@@ -22,3 +22,14 @@ export function deletar(req: Request, res: Response) {
 
     res.status(204).send();
 }
+
+export function atualizar(req: Request, res: Response) {
+    const id = Number(req.params.id);
+    const filme = filmesService.atualizarFilme(id, req.body);
+
+    if (!filme) {
+        return res.status(404).json({ erro: "Filme não encontrado" });
+    }
+
+    res.json(filme);
+}

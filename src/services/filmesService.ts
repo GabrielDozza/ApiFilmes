@@ -27,3 +27,11 @@ export function deletarFilme(id: number): boolean {
     filmes.splice(index, 1);
     return true;
 }
+
+export function atualizarFilme(id: number, dados: Partial<Filme>): Filme | null {
+    const filme = filmes.find(f => f.id === id);
+    if (!filme) return null;
+
+    Object.assign(filme, dados);
+    return filme;
+}
