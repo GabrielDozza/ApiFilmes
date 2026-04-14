@@ -1,11 +1,14 @@
 import { PrismaClient } from "@prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
+
+if (!process.env.DATABASE_URL) {
+  throw new Error("DATABASE_URL is not defined in the environment.");
+}
 
 const prisma = new PrismaClient({
-  datasources: {
-    db: {
-      url: "postgres://6033e4388737ddff818ade1761b2de1def7f849da3354fdf0b520c6003fa67f5:sk_VfOG96357d1Lx8m4fH6jq@db.prisma.io:5432/postgres?sslmode=require"
-    }
-  }
+  adapter: new PrismaPg({
+    connectionString: process.env.DATABASE_URL,
+  }),
 });
 
 export default prisma;
