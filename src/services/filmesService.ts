@@ -1,37 +1,29 @@
 import filmes from "../data/filmes";
 import { Filme } from "../types/Filme";
+import prisma from "../database/prisma";
 
-export function listarFilmes(): Filme[] {
-    return filmes;
+export async function listarFilmes() {
+    return await prisma.filme.findMany();
 }
-
-export function criarFilme(dados: Omit<Filme, "id">): Filme {
-    const novoFilme: Filme = {
-        id: Date.now(),
-        ...dados
-    };
-
-    filmes.push(novoFilme);
-    return novoFilme;
+export async function criarFilme(dados: any) {
+    return await prisma.filme.create({
+        data: dados
+    });
 }
 
 export function buscarPorId(id: number): Filme | undefined {
     return filmes.find(f => f.id === id);
 }
 
-export function deletarFilme(id: number): boolean {
-    const index = filmes.findIndex(f => f.id === id);
-
-    if (index === -1) return false;
-
-    filmes.splice(index, 1);
-    return true;
+export async function deletarFilme(id: number) {
+    return await prisma.filme.delete({
+        where: { id }
+    });
 }
 
-export function atualizarFilme(id: number, dados: Partial<Filme>): Filme | null {
-    const filme = filmes.find(f => f.id === id);
-    if (!filme) return null;
-
-    Object.assign(filme, dados);
-    return filme;
+export async function atualizarFilme(id: number, dados: any) {
+    return await prisma.filme.update({
+        where: { id },
+        data: dados
+    });
 }

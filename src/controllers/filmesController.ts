@@ -1,15 +1,14 @@
 import { Request, Response } from "express";
 import * as filmesService from "../services/filmesService";
 
-export function listar(req: Request, res: Response) {
-    const lista = filmesService.listarFilmes();
-    res.json(lista);
+export async function listar(req: Request, res: Response) {
+    const filmes = await filmesService.listarFilmes();
+    res.json(filmes);
 }
 
 export function criar(req: Request, res: Response) {
     const { titulo, descricao, diretor, ano, genero } = req.body;
 
-    // 🔥 VALIDAÇÃO AQUI
     if (!titulo || !descricao || !diretor) {
         return res.status(400).json({ erro: "Campos obrigatórios" });
     }

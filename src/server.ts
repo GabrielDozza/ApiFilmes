@@ -1,6 +1,9 @@
 import express from "express";
-import filmesRoutes from "./routes/filmesRoutes";
-import reviewsRoutes from "./routes/reviewsRoutes";
+import filmesRoutes from "./src/routes/filmesRoutes";
+import reviewsRoutes from "./src/routes/reviewsRoutes";
+import "dotenv/config";
+
+console.log("DATABASE_URL:", process.env.DATABASE_URL);
 
 const app = express();
 
