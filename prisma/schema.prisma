@@ -10,3 +10,21 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model Filme {
+  id        Int      @id @default(autoincrement())
+  titulo    String
+  descricao String
+  diretor   String
+  ano       Int
+  genero    String
+  reviews   Review[]
+}
+
+model Review {
+  id         Int    @id @default(autoincrement())
+  comentario String
+  nota       Int
+  filmeId    Int
+  filme      Filme  @relation(fields: [filmeId], references: [id], onDelete: Cascade)
+}

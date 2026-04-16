@@ -1,30 +1,45 @@
-import reviews from "../data/reviews";
+import prisma from "../database/prisma";
 import { Review } from "../types/Review";
 
-export function criarReview(
+export async function criarReview(
     filmeId: number,
-    dados: Omit<Review, "id" | "filmeId">   
-): Review {
-
-    const novaReview: Review = {
-        id: Date.now(),
-        filmeId,
-        ...dados
-    };
-
-    reviews.push(novaReview);
-    return novaReview;
+    dados: Omit<Review, "id" | "filmeId">
+) {
+    return await prisma.review.create({
+        data: {
+            filmeId,
+            ...dados
+        }
+    });
 }
 
-export function listarReviews(filmeId: number): Review[] {
-    return reviews.filter(r => r.filmeId === filmeId);
+export async function listarReviews(filmeId: number) {
+    return await prisma.review.findMany({
+        where: { filmeId }
+    });
 }
 
-export function deletarReview(id: number): boolean {
-    const index = reviews.findIndex(r => r.id === id);
+export async function atualizarReview(
+    id: number,
+    dados: Partial<Omit<Review, "id" | "filmeId">>
+) {
+    try {
+        return await prisma.review.update({
+            where: { id },
+            data: dados
+        });
+    } catch {
+        return null;
+    }
+}
 
-    if (index === -1) return false;
-
-    reviews.splice(index, 1);
-    return true;
+export async function deletarReview(id: number) {
+    try {
+        await prisma.review.delete({
+            where: { id }
+        });
+        return true;
+    } catch {
+        return false;
+    }
 }
