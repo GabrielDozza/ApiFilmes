@@ -1,45 +1,37 @@
-import prisma from "../database/prisma";
-import { Review } from "../types/Review";
+import reviewsRepository from "../repositories/reviewsRepository";
 
-export async function criarReview(
-    filmeId: number,
-    dados: Omit<Review, "id" | "filmeId">
-) {
-    return await prisma.review.create({
-        data: {
-            filmeId,
-            ...dados
-        }
-    });
-}
+class ReviewsService {
+  private static instance: ReviewsService | null = null;
 
-export async function listarReviews(filmeId: number) {
-    return await prisma.review.findMany({
-        where: { filmeId }
-    });
-}
+  private constructor() {}
 
-export async function atualizarReview(
-    id: number,
-    dados: Partial<Omit<Review, "id" | "filmeId">>
-) {
-    try {
-        return await prisma.review.update({
-            where: { id },
-            data: dados
-        });
-    } catch {
-        return null;
+  public static getInstance(): ReviewsService {
+    if (!ReviewsService.instance) {
+      ReviewsService.instance = new ReviewsService();
     }
+    return ReviewsService.instance;
+  }
+
+  public async criarReview(filmeId: number, dados: any) {
+    return await reviewsRepository.criarReview(filmeId, dados);
+  }
+
+  public async listarReviews(filmeId: number) {
+    return await reviewsRepository.listarReviews(filmeId);
+  }
+
+  public async atualizarReview(id: number, dados: any) {
+    return await reviewsRepository.atualizarReview(id, dados);
+  }
+
+  public async deletarReview(id: number) {
+    return await reviewsRepository.deletarReview(id);
+  }
 }
 
-export async function deletarReview(id: number) {
-    try {
-        await prisma.review.delete({
-            where: { id }
-        });
-        return true;
-    } catch {
-        return false;
-    }
-}
+const reviewsService = ReviewsService.getInstance();
+
+export const criarReview = reviewsService.criarReview.bind(reviewsService);
+export const listarReviews = reviewsService.listarReviews.bind(reviewsService);
+export const atualizarReview = reviewsService.atualizarReview.bind(reviewsService);
+export const deletarReview = reviewsService.deletarReview.bind(reviewsService);

@@ -1,31 +1,43 @@
 import { Filme } from "../types/Filme";
-import prisma from "../database/prisma";
+import filmesRepository from "../repositories/filmesRepository";
 
-export async function listarFilmes(): Promise<Filme[]> {
-    return await prisma.filme.findMany();
+class FilmesService {
+  private static instance: FilmesService | null = null;
+
+  private constructor() {}
+
+  public static getInstance(): FilmesService {
+    if (!FilmesService.instance) {
+      FilmesService.instance = new FilmesService();
+    }
+    return FilmesService.instance;
+  }
+
+  public async listarFilmes(): Promise<Filme[]> {
+    return await filmesRepository.listarFilmes();
+  }
+
+  public async criarFilme(dados: any) {
+    return await filmesRepository.criarFilme(dados);
+  }
+
+  public async buscarPorId(id: number): Promise<Filme | null> {
+    return await filmesRepository.buscarPorId(id);
+  }
+
+  public async deletarFilme(id: number) {
+    return await filmesRepository.deletarFilme(id);
+  }
+
+  public async atualizarFilme(id: number, dados: any) {
+    return await filmesRepository.atualizarFilme(id, dados);
+  }
 }
 
-export async function criarFilme(dados: any) {
-    return await prisma.filme.create({
-        data: dados
-    });
-}
+const filmesService = FilmesService.getInstance();
 
-export async function buscarPorId(id: number): Promise<Filme | null> {
-    return await prisma.filme.findUnique({
-        where: { id }
-    });
-}
-
-export async function deletarFilme(id: number) {
-    return await prisma.filme.delete({
-        where: { id }
-    });
-}
-
-export async function atualizarFilme(id: number, dados: any) {
-    return await prisma.filme.update({
-        where: { id },
-        data: dados
-    });
-}
+export const listarFilmes = filmesService.listarFilmes.bind(filmesService);
+export const criarFilme = filmesService.criarFilme.bind(filmesService);
+export const buscarPorId = filmesService.buscarPorId.bind(filmesService);
+export const deletarFilme = filmesService.deletarFilme.bind(filmesService);
+export const atualizarFilme = filmesService.atualizarFilme.bind(filmesService);
