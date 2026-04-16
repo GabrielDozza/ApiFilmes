@@ -7,7 +7,7 @@ export async function listar(req: Request, res: Response) {
     const filme = await filmesService.buscarPorId(filmeId);
 
     if (!filme) {
-        return res.status(404).json({ erro: "Filme n„o encontrado" });
+        return res.status(404).json({ erro: "Filme n√£o encontrado" });
     }
 
     const lista = await reviewsService.listarReviews(filmeId);
@@ -20,15 +20,15 @@ export async function criar(req: Request, res: Response) {
 
     const filme = await filmesService.buscarPorId(filmeId);
     if (!filme) {
-        return res.status(404).json({ erro: "Filme n„o existe" });
+        return res.status(404).json({ erro: "Filme n√£o existe" });
     }
 
     if (!comentario || nota === undefined) {
-        return res.status(400).json({ erro: "Campos obrigatÛrios" });
+        return res.status(400).json({ erro: "Campos obrigat√≥rios" });
     }
 
     if (typeof nota !== "number") {
-        return res.status(400).json({ erro: "Nota deve ser um n˙mero" });
+        return res.status(400).json({ erro: "Nota deve ser um n√∫mero" });
     }
 
     const review = await reviewsService.criarReview(filmeId, { comentario, nota });
@@ -42,12 +42,12 @@ export async function atualizar(req: Request, res: Response) {
 
     const filme = await filmesService.buscarPorId(filmeId);
     if (!filme) {
-        return res.status(404).json({ erro: "Filme n„o encontrado" });
+        return res.status(404).json({ erro: "Filme n√£o encontrado" });
     }
 
     const review = await reviewsService.atualizarReview(id, req.body);
     if (!review) {
-        return res.status(404).json({ erro: "Review n„o encontrada" });
+        return res.status(404).json({ erro: "Review n√£o encontrada" });
     }
 
     res.json(review);
@@ -59,7 +59,7 @@ export async function deletar(req: Request, res: Response) {
     const sucesso = await reviewsService.deletarReview(id);
 
     if (!sucesso) {
-        return res.status(404).json({ erro: "Review n„o encontrada" });
+        return res.status(404).json({ erro: "Review n√£o encontrada" });
     }
 
     res.status(204).send();

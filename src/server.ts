@@ -18,5 +18,5 @@ app.listen(3000, () => {
 });
 
 app.get("/", (req, res) => {
-    res.send("API funcionando 🚀");
+    res.send("API funcionando ");
 });

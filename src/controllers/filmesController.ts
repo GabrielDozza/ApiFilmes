@@ -11,7 +11,7 @@ export async function buscarPorId(req: Request, res: Response) {
     const filme = await filmesService.buscarPorId(id);
 
     if (!filme) {
-        return res.status(404).json({ erro: "Filme n„o encontrado" });
+        return res.status(404).json({ erro: "Filme n√£o encontrado" });
     }
 
     res.json(filme);
@@ -21,11 +21,11 @@ export async function criar(req: Request, res: Response) {
     const { titulo, descricao, diretor, ano, genero } = req.body;
 
     if (!titulo || !descricao || !diretor || ano === undefined || !genero) {
-        return res.status(400).json({ erro: "Campos obrigatÛrios" });
+        return res.status(400).json({ erro: "Campos obrigat√≥rios" });
     }
 
     if (typeof ano !== "number") {
-        return res.status(400).json({ erro: "Ano deve ser um n˙mero" });
+        return res.status(400).json({ erro: "Ano deve ser um n√∫mero" });
     }
 
     const filme = await filmesService.criarFilme({ titulo, descricao, diretor, ano, genero });
@@ -40,7 +40,7 @@ export async function deletar(req: Request, res: Response) {
         await filmesService.deletarFilme(id);
         res.status(204).send();
     } catch {
-        res.status(404).json({ erro: "Filme n„o encontrado" });
+        res.status(404).json({ erro: "Filme n√£o encontrado" });
     }
 }
 
@@ -51,6 +51,6 @@ export async function atualizar(req: Request, res: Response) {
         const filme = await filmesService.atualizarFilme(id, req.body);
         res.json(filme);
     } catch {
-        res.status(404).json({ erro: "Filme n„o encontrado" });
+        res.status(404).json({ erro: "Filme n√£o encontrado" });
     }
 }
