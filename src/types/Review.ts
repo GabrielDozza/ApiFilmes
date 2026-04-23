@@ -3,4 +3,7 @@ export interface Review {
     filmeId: number;
     comentario: string;
     nota: number;
+    autor?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
 }

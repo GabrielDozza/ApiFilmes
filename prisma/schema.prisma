@@ -12,19 +12,26 @@ datasource db {
 }
 
 model Filme {
-  id        Int      @id @default(autoincrement())
-  titulo    String
-  descricao String
-  diretor   String
-  ano       Int
-  genero    String
-  reviews   Review[]
+  id          Int       @id @default(autoincrement())
+  titulo      String
+  descricao   String
+  diretor     String
+  ano         Int
+  genero      String
+  poster      String?   // URL da imagem do poster
+  duracao     Int?      // Duração em minutos
+  createdAt  DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  reviews     Review[]
 }
 
 model Review {
-  id         Int    @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   comentario String
-  nota       Int
+  nota       Int      // Nota de 0 a 10
+  autor      String?  // Nome do autor da review
   filmeId    Int
-  filme      Filme  @relation(fields: [filmeId], references: [id], onDelete: Cascade)
+  filme      Filme    @relation(fields: [filmeId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }

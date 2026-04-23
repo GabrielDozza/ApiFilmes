@@ -16,47 +16,66 @@ class ReviewsController {
 
   public async listar(req: Request, res: Response) {
     const filmeId = Number(req.params.filmeId);
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+
     const filme = await filmesService.buscarPorId(filmeId);
 
     if (!filme) {
-      return res.status(404).json({ erro: "Filme n�o encontrado" });
+      return res.status(404).json({ erro: "Filme não encontrado" });
     }
 
-    const lista = await reviewsService.listarReviews(filmeId);
-    res.json(lista);
+    const result = await reviewsService.listarReviews(filmeId, page, limit);
+    res.json(result);
   }
 
   public async criar(req: Request, res: Response) {
     const filmeId = Number(req.params.filmeId);
-    const { comentario, nota } = req.body;
+    const { comentario, nota, autor } = req.body;
 
     const filme = await filmesService.buscarPorId(filmeId);
     if (!filme) {
-      return res.status(404).json({ erro: "Filme n�o existe" });
+      return res.status(404).json({ erro: "Filme não existe" });
     }
 
     if (!comentario || nota === undefined) {
-      return res.status(400).json({ erro: "Campos obrigat�rios" });
+      return res.status(400).json({ erro: "Campos obrigatórios" });
     }
 
     if (typeof nota !== "number") {
-      return res.status(400).json({ erro: "Nota deve ser um n�mero" });
+      return res.status(400).json({ erro: "Nota deve ser um número" });
     }
 
-    const review = await reviewsService.criarReview(filmeId, { comentario, nota });
+    // Validação de nota (0-10)
+    if (nota < 0 || nota > 10) {
+      return res.status(400).json({ erro: "Nota deve estar entre 0 e 10" });
+    }
+
+    const review = await reviewsService.criarReview(filmeId, { comentario, nota, autor });
     res.status(201).json(review);
   }
 
   public async atualizar(req: Request, res: Response) {
     const filmeId = Number(req.params.filmeId);
     const id = Number(req.params.id);
+    const { comentario, nota, autor } = req.body;
 
     const filme = await filmesService.buscarPorId(filmeId);
     if (!filme) {
       return res.status(404).json({ erro: "Filme não encontrado" });
     }
 
-    const review = await reviewsService.atualizarReview(id, req.body);
+    // Validação de nota (0-10)
+    if (nota !== undefined) {
+      if (typeof nota !== "number") {
+        return res.status(400).json({ erro: "Nota deve ser um número" });
+      }
+      if (nota < 0 || nota > 10) {
+        return res.status(400).json({ erro: "Nota deve estar entre 0 e 10" });
+      }
+    }
+
+    const review = await reviewsService.atualizarReview(id, { comentario, nota, autor });
     if (!review) {
       return res.status(404).json({ erro: "Review não encontrada" });
     }

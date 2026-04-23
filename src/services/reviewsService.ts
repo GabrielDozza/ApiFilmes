@@ -16,8 +16,8 @@ class ReviewsService {
     return await reviewsRepository.criarReview(filmeId, dados);
   }
 
-  public async listarReviews(filmeId: number) {
-    return await reviewsRepository.listarReviews(filmeId);
+  public async listarReviews(filmeId: number, page: number = 1, limit: number = 10) {
+    return await reviewsRepository.listarReviews(filmeId, page, limit);
   }
 
   public async atualizarReview(id: number, dados: any) {

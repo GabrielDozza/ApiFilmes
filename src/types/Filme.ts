@@ -5,4 +5,8 @@ export interface Filme {
     diretor: string;
     ano: number;
     genero: string;
+    poster?: string;
+    duracao?: number;
+    createdAt?: Date;
+    updatedAt?: Date;
 }

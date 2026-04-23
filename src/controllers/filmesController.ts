@@ -14,8 +14,13 @@ class FilmesController {
   }
 
   public async listar(req: Request, res: Response) {
-    const filmes = await filmesService.listarFilmes();
-    res.json(filmes);
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const busca = req.query.busca as string | undefined;
+    const genero = req.query.genero as string | undefined;
+
+    const result = await filmesService.listarFilmes(page, limit, busca, genero);
+    res.json(result);
   }
 
   public async buscarPorId(req: Request, res: Response) {
@@ -30,7 +35,7 @@ class FilmesController {
   }
 
   public async criar(req: Request, res: Response) {
-    const { titulo, descricao, diretor, ano, genero } = req.body;
+    const { titulo, descricao, diretor, ano, genero, poster, duracao } = req.body;
 
     if (!titulo || !descricao || !diretor || ano === undefined || !genero) {
       return res.status(400).json({ erro: "Campos obrigatórios" });
@@ -40,7 +45,15 @@ class FilmesController {
       return res.status(400).json({ erro: "Ano deve ser um número" });
     }
 
-    const filme = await filmesService.criarFilme({ titulo, descricao, diretor, ano, genero });
+    const filme = await filmesService.criarFilme({ 
+      titulo, 
+      descricao, 
+      diretor, 
+      ano, 
+      genero,
+      poster,
+      duracao
+    });
     res.status(201).json(filme);
   }
 

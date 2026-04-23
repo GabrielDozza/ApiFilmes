@@ -1,5 +1,6 @@
 import "dotenv/config";
-import express, { Application } from "express";
+import express, { Application, Request, Response, NextFunction } from "express";
+import cors from "cors";
 import filmesRoutes from "./routes/filmesRoutes";
 import reviewsRoutes from "./routes/reviewsRoutes";
 
@@ -20,12 +21,30 @@ class AppServer {
   }
 
   private init() {
-    console.log("DATABASE_URL:", process.env.DATABASE_URL);
+    // Middlewares
+    this.app.use(cors());
     this.app.use(express.json());
+
+    // Rotas
     this.app.use("/filmes", filmesRoutes);
     this.app.use("/filmes", reviewsRoutes);
+
+    // Health check
     this.app.get("/", (req, res) => {
-      res.send("API funcionando");
+      res.json({ 
+        status: "ok", 
+        message: "API de Filmes funcionando",
+        timestamp: new Date().toISOString()
+      });
+    });
+
+    // Middleware de erro global
+    this.app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+      console.error("Erro:", err.message);
+      res.status(500).json({ 
+        erro: "Erro interno do servidor",
+        mensagem: process.env.NODE_ENV === "development" ? err.message : undefined
+      });
     });
   }
 

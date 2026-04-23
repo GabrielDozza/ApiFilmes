@@ -25,10 +25,28 @@ class ReviewsRepository {
     });
   }
 
-  public async listarReviews(filmeId: number) {
-    return await prisma.review.findMany({
-      where: { filmeId }
-    });
+  public async listarReviews(filmeId: number, page: number = 1, limit: number = 10) {
+    const skip = (page - 1) * limit;
+
+    const [reviews, total] = await Promise.all([
+      prisma.review.findMany({
+        where: { filmeId },
+        skip,
+        take: limit,
+        orderBy: { createdAt: "desc" }
+      }),
+      prisma.review.count({ where: { filmeId } })
+    ]);
+
+    return {
+      data: reviews,
+      meta: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit)
+      }
+    };
   }
 
   public async atualizarReview(

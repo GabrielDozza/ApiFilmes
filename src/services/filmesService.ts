@@ -1,6 +1,16 @@
 import { Filme } from "../types/Filme";
 import filmesRepository from "../repositories/filmesRepository";
 
+interface PaginatedResult {
+  data: Filme[];
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
 class FilmesService {
   private static instance: FilmesService | null = null;
 
@@ -13,8 +23,13 @@ class FilmesService {
     return FilmesService.instance;
   }
 
-  public async listarFilmes(): Promise<Filme[]> {
-    return await filmesRepository.listarFilmes();
+  public async listarFilmes(
+    page: number = 1, 
+    limit: number = 10, 
+    busca?: string, 
+    genero?: string
+  ): Promise<PaginatedResult> {
+    return await filmesRepository.listarFilmes(page, limit, busca, genero);
   }
 
   public async criarFilme(dados: any) {
